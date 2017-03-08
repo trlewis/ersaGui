@@ -44,7 +44,7 @@ public final class RsaKeyStoreManager {
             kcl.onKeyChanged(new KeyChangeEvent(this, name, KeyChangeEventType.ADDED));
     }
 
-    public void deleteMyKeyPair(String name) {
+    public void removeMyKeyPair(String name) {
         _keyStore.removeMyKey(name);
         for(KeyChangeListener kcl : _myKeyListeners)
             kcl.onKeyChanged(new KeyChangeEvent(this, name, KeyChangeEventType.REMOVED));
