@@ -14,11 +14,19 @@ import java.util.Set;
 public final class RsaKeyStoreManager {
     private static List<KeyChangeListener> _otherKeyListeners = new ArrayList<>();
     private static List<KeyChangeListener> _myKeyListeners = new ArrayList<>();
-    private static RsaKeyStore _keyStore = new RsaKeyStore();
+    private RsaKeyStore _keyStore = new RsaKeyStore();
 
     private static RsaKeyStoreManager _instance;
 
+    private String _filePath;
+
     private RsaKeyStoreManager(){}
+
+    private RsaKeyStoreManager(String filePath) {
+        this._filePath=  filePath;
+
+        //TODO: check to see if file exists or not.
+    }
 
     public static RsaKeyStoreManager getInstance(){
         if(_instance == null)
@@ -34,24 +42,28 @@ public final class RsaKeyStoreManager {
         _otherKeyListeners.add(listener);
     }
 
+    public static void openKeyStoreFile(String filePath) {
+        _instance = new RsaKeyStoreManager(filePath);
+    }
+
     public void createNewMyKeyPair(String name) {
         boolean success = _keyStore.createNewMyKeyPair(name);
         if(!success)
             return;
 
-        KeyPair kp = _keyStore.getMyKeyPair(name);
+        this._keyStore.getMyKeyPair(name);
         for(KeyChangeListener kcl : _myKeyListeners)
             kcl.onKeyChanged(new KeyChangeEvent(this, name, KeyChangeEventType.ADDED));
     }
 
     public void removeMyKeyPair(String name) {
-        _keyStore.removeMyKey(name);
+        this._keyStore.removeMyKey(name);
         for(KeyChangeListener kcl : _myKeyListeners)
             kcl.onKeyChanged(new KeyChangeEvent(this, name, KeyChangeEventType.REMOVED));
     }
 
     public void addOtherKey(String name, PublicKey key) {
-        boolean result = _keyStore.addOtherKey(name, key);
+        boolean result = this._keyStore.addOtherKey(name, key);
         if(!result)
             return;
         for(KeyChangeListener kcl : _otherKeyListeners)
@@ -59,7 +71,7 @@ public final class RsaKeyStoreManager {
     }
 
     public void removeOtherKey(String name) {
-        _keyStore.removeOtherKey(name);
+        this._keyStore.removeOtherKey(name);
         for(KeyChangeListener kcl : _otherKeyListeners)
             kcl.onKeyChanged(new KeyChangeEvent(this, name, KeyChangeEventType.REMOVED));
     }

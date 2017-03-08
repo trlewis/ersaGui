@@ -14,8 +14,6 @@ import java.security.PublicKey;
 public final class MainWindow {
     //final modifier on class prevents extension of class, making it function like static
 
-    RsaKeyStore ks = new RsaKeyStore();
-
     // for making MainWindow function as static
     private MainWindow() { }
 
@@ -25,6 +23,9 @@ public final class MainWindow {
         frame.setPreferredSize(windowSize);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        frame.setContentPane(new LoadKeyStoreWindow().getRootPanel());
+
+
         JTabbedPane tabbedPane = new JTabbedPane();
         EncryptMessageTab etab = new EncryptMessageTab();
         tabbedPane.addTab("Encrypt", null, etab.getRootPanel());
@@ -33,30 +34,12 @@ public final class MainWindow {
         tabbedPane.addTab("Decrypt", null, dtab.getRootPanel());
 
         frame.setContentPane(tabbedPane);
+
         frame.pack();
         frame.setVisible(true);
-
-
-
-//        EncryptMessageTab etab = new EncryptMessageTab();
-//        frame.setContentPane(etab.getRootPanel());
-//        frame.pack();
-//        frame.setVisible(true);
-//
-//        JLabel label = new JLabel("Hello World!!");
-//        frame.getContentPane().add(label);
-//
-//        frame.pack();
-//        frame.setVisible(true);
-
-//        JFrame frame = new JFrame("ersa GUI");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
-//        frame.getContentPane().add(etab);
-
     }
 
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(() -> createAndShowGUI());
+        javax.swing.SwingUtilities.invokeLater(MainWindow::createAndShowGUI);
     }
 }
