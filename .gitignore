@@ -1,0 +1,6 @@
+# build directory
+out/
+
+# IntelliJ files
+# *.iml # keeping the project file
+.idea/
